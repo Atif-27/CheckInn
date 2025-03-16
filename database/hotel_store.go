@@ -14,8 +14,8 @@ type HotelStore interface {
 	UpdateHotel(ctx context.Context, filter map[string]any, update map[string]any) error
 	GetHotelById(context.Context, string) (*types.Hotel, error)
 	GetHotels(ctx context.Context, filter map[string]any,
-		//  paginaton *Pagination
-		 ) ([]*types.Hotel, error)
+	//  paginaton *Pagination
+	) ([]*types.Hotel, error)
 }
 
 type MongoHotelStore struct {
@@ -47,11 +47,10 @@ func (m *MongoHotelStore) UpdateHotel(ctx context.Context, filter map[string]any
 	return nil
 }
 
+func (s *MongoHotelStore) GetHotels(ctx context.Context, filter map[string]any,
 
-
-func (s *MongoHotelStore) GetHotels(ctx context.Context, filter map[string]any, 
-	// pag *Pagination
-	) ([]*types.Hotel, error) {
+// pag *Pagination
+) ([]*types.Hotel, error) {
 	// var (
 	// 	skip = (pag.Page - 1) * pag.Limit
 	// )
@@ -60,9 +59,8 @@ func (s *MongoHotelStore) GetHotels(ctx context.Context, filter map[string]any,
 	// 	Skip:  &skip,
 	// }
 
-	resp, err := s.coll.Find(ctx, filter,
-		//  opts
-		)
+	resp, err := s.coll.Find(ctx, filter)//  opts
+
 	if err != nil {
 		return nil, err
 	}

@@ -8,16 +8,16 @@ const (
 	RoomColl  = "rooms"
 )
 
-type DbStore struct{
-	User UserStore
-	Room RoomStore
+type DbStore struct {
+	User  UserStore
+	Room  RoomStore
 	Hotel HotelStore
 }
 
-func MakeDbStore(user UserStore, room RoomStore, hotel HotelStore) *DbStore{
+func MakeDbStore(user UserStore, room RoomStore, hotel HotelStore) *DbStore {
 	return &DbStore{
-		User:    user,
-		Hotel:   hotel,
-		Room:    room,
+		User:  user,
+		Hotel: hotel,
+		Room:  room,
 	}
 }

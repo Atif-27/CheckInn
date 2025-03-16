@@ -15,11 +15,12 @@ type HotelHandler struct {
 	store *database.DbStore
 }
 
-func NewHotelHandler(store  *database.DbStore) *HotelHandler {
+func NewHotelHandler(store *database.DbStore) *HotelHandler {
 	return &HotelHandler{
 		store: store,
 	}
 }
+
 type ResourceResponse struct {
 	Results int `json:"results"`
 	Data    any `json:"data"`
@@ -29,21 +30,21 @@ type HotelQueryParams struct {
 	Rating int
 	// database.Pagination
 }
+
 func (h *HotelHandler) HandleGetHotels(c *fiber.Ctx) error {
 	var params HotelQueryParams
 	if err := c.QueryParser(&params); err != nil {
 		// return ErrBadRequest()
 	}
 	var filter bson.M
-	if params.Rating!= 0 {
+	if params.Rating != 0 {
 		filter = bson.M{
 			"rating": params.Rating,
 		}
 	}
-	
-	hotels, err := h.store.Hotel.GetHotels(c.Context(), filter,
-	//  &params.Pagination
-	)
+
+	hotels, err := h.store.Hotel.GetHotels(c.Context(), filter)//  &params.Pagination
+
 	if err != nil {
 		return err
 	}
@@ -54,7 +55,6 @@ func (h *HotelHandler) HandleGetHotels(c *fiber.Ctx) error {
 	}
 	return c.JSON(resp)
 }
-
 
 func (h *HotelHandler) HandleGetHotelById(c *fiber.Ctx) error {
 	id := c.Params("id")
@@ -69,14 +69,12 @@ func (h *HotelHandler) HandleGetHotelById(c *fiber.Ctx) error {
 			return c.JSON(map[string]string{"error": "not found!"})
 		}
 		// if len(err.(db.DBError).Err) != 0 {
-			// return ErrInvalidId()
+		// return ErrInvalidId()
 		// }
 		return err
 	}
 	return c.JSON(hotel)
 }
-
-
 
 func (h *HotelHandler) HandleGetRooms(c *fiber.Ctx) error {
 	id := c.Params("id")

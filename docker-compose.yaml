@@ -1,10 +1,32 @@
+version: "3.9"
 services:
-  mongodb_service:
+  mongo:
     image: mongo:latest
+    container_name: "mongo"
     ports:
       - "27017:27017"
     volumes:
-      - mongo-vol:/data/db
+      - mongodb:/data/db
+      - mongoconfig:/data/configdb
+    networks:
+      - hotel-reservation-api
+  api:
+    build: .
+    container_name: hotel-reservation
+    ports:
+      - "3000:3000"
+    depends_on:
+      - "mongo"
+    networks:
+      - hotel-reservation-api
+    environment:
+      - MONGO_URI=mongodb://mongo:27017
+      - PORT=:3000
+
+networks:
+  hotel-reservation-api:
+    driver: bridge
 
 volumes:
- mongo-vol:
+  mongodb:
+  mongoconfig:

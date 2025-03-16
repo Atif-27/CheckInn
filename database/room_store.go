@@ -44,7 +44,6 @@ func (m *MongoDbRoomStore) InsertRoom(ctx context.Context, room *types.Room) (*t
 	return room, nil
 }
 
-
 func (m *MongoDbRoomStore) GetRooms(ctx context.Context, filter bson.M) ([]*types.Room, error) {
 	resp, err := m.roomColl.Find(ctx, filter)
 	if err != nil {
@@ -56,4 +55,3 @@ func (m *MongoDbRoomStore) GetRooms(ctx context.Context, filter bson.M) ([]*type
 	}
 	return rooms, nil
 }
-
