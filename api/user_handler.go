@@ -10,19 +10,19 @@ import (
 )
 
 type UserHandler struct {
-	userStore database.UserStore
+	store *database.DbStore
 }
 
-func NewUserHandler(userStore database.UserStore) *UserHandler {
+func NewUserHandler(store *database.DbStore) *UserHandler {
 	return &UserHandler{
-		userStore: userStore,
+		store: store,
 	}
 }
 func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 	var (
 		user_id = c.Params("id")
 	)
-	user, err := h.userStore.GetUserByID(c.Context(), user_id)
+	user, err := h.store.User.GetUserByID(c.Context(), user_id)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return c.JSON(map[string]string{"error": "No user found"})
@@ -32,7 +32,7 @@ func (h *UserHandler) HandleGetUser(c *fiber.Ctx) error {
 	return c.JSON(user)
 }
 func (h *UserHandler) HandleGetUsers(c *fiber.Ctx) error {
-	users, err := h.userStore.GetUsers(c.Context())
+	users, err := h.store.User.GetUsers(c.Context())
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (h *UserHandler) HandlePostUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	insertedUser, err := h.userStore.CreateUser(c.Context(), user)
+	insertedUser, err := h.store.User.CreateUser(c.Context(), user)
 	if err != nil {
 		return err
 	}
@@ -72,7 +72,7 @@ func (h *UserHandler) HandlePutUser(c *fiber.Ctx) error {
 	if err != nil {
 		return err
 	}
-	err = h.userStore.PutUser(c.Context(), id, data)
+	err = h.store.User.PutUser(c.Context(), id, data)
 	if err != nil {
 		return err
 	}
@@ -82,7 +82,7 @@ func (h *UserHandler) HandlePutUser(c *fiber.Ctx) error {
 }
 func (h *UserHandler) HandleDeleteUser(c *fiber.Ctx) error {
 	id := c.Params("id")
-	err := h.userStore.DeleteUser(c.Context(), id)
+	err := h.store.User.DeleteUser(c.Context(), id)
 	if err != nil {
 		return err
 	}

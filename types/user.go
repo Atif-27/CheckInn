@@ -9,13 +9,13 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-const (
-	BCRYPT_COST     = 12
-	minLenFirstname = 2
-	minLenLastname  = 2
-	minLenPassword  = 7
-)
-
+type User struct {
+	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Firstname string             `bson:"firstName" json:"firstName"`
+	Lastname  string             `bson:"lastName" json:"lastName"`
+	Email     string             `bson:"email" json:"email"`
+	Password  string             `bson:"password" json:"password,omitempty"`
+}
 type UpdateUserParams struct {
 	Firstname string `bson:"firstName" json:"firstName"`
 	Lastname  string `bson:"lastName" json:"lastName"`
@@ -26,6 +26,13 @@ type CreateUserParams struct {
 	Email     string `bson:"email" json:"email"`
 	Password  string `bson:"password" json:"password,omitempty"`
 }
+
+const (
+	BCRYPT_COST     = 12
+	minLenFirstname = 2
+	minLenLastname  = 2
+	minLenPassword  = 7
+)
 
 func (params CreateUserParams) Validate() []string {
 	log.Info("enter Validate()")
@@ -51,14 +58,6 @@ func (params CreateUserParams) Validate() []string {
 func isEmailValid(e string) bool {
 	emailRegex := regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 	return emailRegex.MatchString(e)
-}
-
-type User struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Firstname string             `bson:"firstName" json:"firstName"`
-	Lastname  string             `bson:"lastName" json:"lastName"`
-	Email     string             `bson:"email" json:"email"`
-	Password  string             `bson:"password" json:"password,omitempty"`
 }
 
 func NewUserFromParams(params CreateUserParams) (*User, error) {
